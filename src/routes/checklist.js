@@ -1,15 +1,78 @@
 const express = require("express");
+const checklist = require("../models/checklist");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  console.log("Olá");
-  res.send();
+const Checklist = require("../models/checklist");
+
+router.get("/", async (req, res) => {
+  try {
+    let checklists = await Checklist.find({});
+    res.status(200).render("checklists/index", { checklists: checklists });
+  } catch (e) {
+    res
+      .status(200)
+      .render("pages/error", { error: "Erro ao exibir as Listas" });
+  }
 });
 
-router.post("/", (req, res) => {
-  console.log(req.body);
-  res.status(200).send(req.body);
+router.get("/new", async (req, res) => {
+  try {
+    let checklist = new Checklist();
+    res.status(200).render("checklists/new", { checklist: checklist });
+  } catch (error) {
+    res
+      .status(500)
+      .render("pages/error", { errors: "Erro ao carregar o formulário." });
+  }
 });
 
+router.post("/", async (req, res) => {
+  let { name } = req.body.checklist;
+  let checklist = new Checklist({ name });
+
+  //bloco try & catch
+  try {
+    await checklist.save();
+    res.redirect("/checklists");
+  } catch (error) {
+    res
+      .status(422)
+      .render("checklists/new", { checklist: { ...checklist, error } });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    let checklist = await Checklist.findById(req.params.id);
+    res.status(200).render("checklists/show", { checklist: checklist });
+  } catch (error) {
+    res
+      .status(500)
+      .render("pages/error", { error: "Erro ao exibir as Listas de tarefas." });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  let { name } = req.body;
+  try {
+    let checklist = await Checklist.findByIdAndUpdate(
+      req.params.id,
+      { name },
+      { new: true }
+    );
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    let checklist = await Checklist.findByIdAndRemove(req.params.id);
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
+  }
+});
 module.exports = router;
