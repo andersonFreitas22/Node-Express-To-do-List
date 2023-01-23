@@ -41,8 +41,11 @@ simpleRouter.delete("/:id", async (req, res) => {
     let task = await Task.findByIdAndDelete(req.params.id);
     let checklist = await Checklist.findById(task.checklist);
     let taskToRemove = checklist.tasks.indexOf(task._id);
-    checklist.tasks.slice(taskToRemove);
+    checklist.tasks.splice(taskToRemove, 1);
     checklist.save();
+    // console.log(checklist.tasks);
+    console.log(checklist);
+    console.log(taskToRemove);
     res.redirect(`/checklists/${checklist._id}`);
   } catch (error) {
     res
