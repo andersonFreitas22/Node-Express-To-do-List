@@ -12,7 +12,7 @@ O projeto foi construído durante as aulas do curso de Desenvolvimento Web FullS
 ## Funcionalidades
 
 :heavy_check_mark: Criar nova lista de tarefas
-- Uma lisa de tarefas consiste em um card, que pode receber tarefas de acordo com a necessidade do usuário.
+- Uma lista de tarefas consiste em uma aba, que pode receber tarefas de acordo com a necessidade do usuário.
 
 :heavy_check_mark: Editar o nome de uma lista de tarefas
 - Após criada, uma lista de tarefas pode ter o seu nome editado livremente.
